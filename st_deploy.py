@@ -5,6 +5,7 @@ import plotly.express as pex
 anime = pd.read_csv("data1/finalanime.csv")
 items = pd.read_csv('https://www.dropbox.com/s/29gp0edhsnr25nu/items.csv?dl=1')
 
+@st.cache
 def AnimeScout(x):
     anime_name = anime[anime['name'].str.contains(x, case=False)].sort_values(by='members', ascending=False).reset_index()['name'][0]
     count = 1
