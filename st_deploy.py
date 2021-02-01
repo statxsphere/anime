@@ -5,11 +5,11 @@ import plotly.express as pex
 anime = pd.read_csv("data1/finalanime.csv")
 items = pd.read_csv('data1/items.csv')
 
-def AnimeScout(x,n):
+def AnimeScout(x):
     anime_name = anime[anime['name'].str.contains(x, case=False)].sort_values(by='members', ascending=False).reset_index()['name'][0]
     count = 1
     st.write('If you like {}, you may also like:\n'.format(anime_name))
-    for item in items.sort_values(by = anime_name, ascending = False).name[1:int(n)+1]:
+    for item in items.sort_values(by = anime_name, ascending = False).name[1:11]:
         st.write('No. {}: {}'.format(count, item))
         count +=1
 
