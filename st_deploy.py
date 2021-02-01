@@ -51,4 +51,4 @@ So, what are you waiting for? Let's scout some anime!''')
 x = st.text_input('Tell me an anime you like:')
 
 if st.button('Scout Anime!'):
-    AnimeScout(x,10)
+    AnimeScout(x)
