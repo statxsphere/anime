@@ -1,9 +1,9 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as pex
-import numpy as np
-import scipy as sp
-from sklearn.metrics.pairwise import cosine_similarity
+# import numpy as np
+# import scipy as sp
+# from sklearn.metrics.pairwise import cosine_similarity
 
 
 @st.cache 
@@ -43,8 +43,10 @@ The AniMap is designed for people that are new to anime. It's an easy-to-use, in
 * You can hover over any element to get details on it. 
 * Navigate through this map to find the kind of anime you feel most like watching.
 ''')
-
-st.plotly_chart(fig)
+@st.cache 
+def show_chart():
+    return st.plotly_chart(fig)
+show_chart()
 
 st.write('''### Method 2: The Anime Scout.
 
