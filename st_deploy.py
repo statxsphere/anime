@@ -90,7 +90,7 @@ def load_itemsdata():
     return items
 
 
-@st.cache 
+@st.cache(suppress_st_warning=True)
 def AnimeScout(x):
     items = load_itemsdata()
     anime_name = anime[anime['name'].str.contains(x, case=False)].sort_values(by='members', ascending=False).reset_index()['name'][0]
