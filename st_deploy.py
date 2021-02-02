@@ -1,9 +1,9 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as pex
-# import numpy as np
-# import scipy as sp
-# from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+import scipy as sp
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 @st.cache 
@@ -23,7 +23,11 @@ anime = load_animedata()
 #         st.write('No. {}: {}'.format(count, item))
 #         count +=1
 
-
+fig = pex.treemap(anime.dropna(how='any'), path=['type','genre1', 'name'], values='members',
+                  color='rating', hover_data=['rating','episodes'],
+                  color_continuous_scale='RdBu')
+fig.update_layout(title_text="Which Anime Should You Watch?",
+                  font_size=10, autosize=False, width=800, height=500, margin=dict(l=20, r=40, t=100, b=20))
 
 st.title("So, what anime should you watch?")
 st.write('''I've come up with two complimentary methods to help you plan your anime journey out.
@@ -39,15 +43,8 @@ The AniMap is designed for people that are new to anime. It's an easy-to-use, in
 * You can hover over any element to get details on it. 
 * Navigate through this map to find the kind of anime you feel most like watching.
 ''')
-@st.cache 
-def plot_chart():
-    fig = pex.treemap(anime.dropna(how='any'), path=['type','genre1', 'name'], values='members',
-                  color='rating', hover_data=['rating','episodes'],
-                  color_continuous_scale='RdBu')
-    fig.update_layout(title_text="Which Anime Should You Watch?",
-                  font_size=10, autosize=False, width=800, height=500, margin=dict(l=20, r=40, t=100, b=20))
-    return fig
-st.plotly_chart(plot_chart())
+
+st.plotly_chart(fig)
 
 st.write('''### Method 2: The Anime Scout.
 
