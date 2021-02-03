@@ -11,23 +11,24 @@ def load_animedata():
     return pd.read_csv("data1/finalanime.csv")
 
 anime = load_animedata()
-minmem = anime['members'].min()
-maxmem = anime['members'].max()
+# minmem = int(anime['members'].min())
+# maxmem = int(anime['members'].max())
 
-types = st.sidebar.selectbox('Select your medium:', anime['type'].drop_duplicates())
-genres = st.sidebar.selectbox('Select your genre:', anime['genre1'].drop_duplicates())
-ratings = st.sidebar.slider('Rating:',min_value=0,max_value=10,value=(0,10))
-members = st.sidebar.slider('Members:',min_value=minmem,max_value=maxmem,value=(minmem,maxmem),step=1)
+# types = st.sidebar.selectbox('Select your medium:', anime['type'].drop_duplicates())
+# genres = st.sidebar.selectbox('Select your genre:', anime['genre1'].drop_duplicates())
+# ratings = st.sidebar.slider('Rating:',min_value=0,max_value=10,value=(0,10))
+# members = st.sidebar.slider('Members:',min_value=minmem,max_value=maxmem,value=(minmem,maxmem),step=1)
 
-@st.cache 
-def set_filters():
-    df = anime.loc[(anime['type']==types) & (anime['genre1']==genres) & 
-                   (anime['rating']==ratings) & (anime['members']==members)]
-    return df
+# @st.cache 
+# def set_filters():
+#     df = anime.loc[(anime['type']==types) & (anime['genre1']==genres) & 
+#                    (anime['rating']==ratings) & (anime['members']==members)]
+#     return df
+
+# anime1 = set_filters()
 
 @st.cache(allow_output_mutation=True)
 def figM():
-    anime = set_filters()
     fig = pex.treemap(anime.dropna(how='any'), path=['type','genre1', 'name'], values='members',
                       color='rating', hover_data=['rating','episodes'],
                       color_continuous_scale='RdBu')
