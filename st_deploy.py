@@ -23,7 +23,7 @@ anime = load_animedata()
 #         st.write('No. {}: {}'.format(count, item))
 #         count +=1
 
-@st.cache 
+@st.cache(allow_output_mutation=True)
 def figM():
     fig = pex.treemap(anime.dropna(how='any'), path=['type','genre1', 'name'], values='members',
                       color='rating', hover_data=['rating','episodes'],
@@ -91,12 +91,13 @@ def load_itemsdata():
     # piv_sparse = sp.sparse.csr_matrix(piv_norm.values) 
     # items = pd.DataFrame(cosine_similarity(piv_sparse), index = piv_norm.index, columns = piv_norm.index)
     # del piv_norm, piv_sparse
-    items = pd.read_csv('https://www.dropbox.com/s/29gp0edhsnr25nu/items.csv?dl=1',usecols=['name',anime_name])
+    items = pd.read_csv('https://www.dropbox.com/s/29gp0edhsnr25nu/items.csv?dl=1')
+                        # ,usecols=['name',anime_name])
     return items
 
+items = load_itemsdata()
 
 def AnimeScout(x):
-    items = load_itemsdata()
     anime_name = anime[anime['name'].str.contains(x, case=False)].sort_values(by='members', ascending=False).reset_index()['name'][0]
     count = 1
     st.write('If you like {}, you may also like:\n'.format(anime_name))
