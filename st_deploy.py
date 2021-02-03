@@ -11,10 +11,48 @@ def load_animedata():
     return pd.read_csv("data1/finalanime.csv")
 
 anime = load_animedata()
+n_rows = anime.shape[0]
+minmem = anime['members'].min()
+maxmem = anime['members'].max()
+epmin = anime['episodes'].min()
+epmax = anime['episodes'].max()
 
+# types = st.sidebar.selectbox('Select your medium:', anime['type'].unique())
+# genres = anime["genre1"].loc[anime["type"] == types]
+# genre_choice = st.sidebar.selectbox('Select your genre:', genres)
+# sliders = {
+#     "rating": st.sidebar.slider(
+#         "Rating:", min_value=0,max_value=10,value=(0,10)
+#     ),
+#     "members": st.sidebar.slider(
+#         "Members", min_value=minmem,max_value=maxmem,value=(minmem,maxmem),step=1
+#     ),
+#     "episodes": st.sidebar.slider(
+#         "Episodes", min_value=epmin,max_value=epmax,value=(epmin,epmax),step=1.0
+#     ),
+# }
+st.sidebar.title('AniMap Filters:')
+ratings = st.sidebar.slider("Rating:", min_value=1.0,max_value=10.0,value=(1.0,10.0), step=0.1)
+members1 = st.sidebar.slider("Members", min_value=minmem,max_value=maxmem,value=(minmem,maxmem),step=1)
+episodes1 = st.sidebar.slider("Episodes", min_value=epmin,max_value=epmax,value=(epmin,epmax),step=1.0)
+
+# filter = np.full(n_rows, True)  # Initialize filter as only True
+
+# for feature_name, slider in sliders.items():
+#     # Here we update the filter to take into account the value of each slider
+#     filter = (
+#         filter
+#         & (anime[feature_name] >= slider[0])
+#         & (anime[feature_name] <= slider[1])
+#     )
+
+
+anime = anime[(anime.rating.between(ratings[0],ratings[1])) 
+               & (anime.members.between(members1[0],members1[1]))
+               & (anime.episodes.between(episodes1[0],episodes1[1]))]
 
 @st.cache(allow_output_mutation=True)
-def figM():
+def figM(anime):
     fig = pex.treemap(anime.dropna(how='any'), path=['type','genre1', 'name'], values='members',
                       color='rating', hover_data=['rating','episodes'],
                       color_continuous_scale='RdBu')
@@ -22,7 +60,15 @@ def figM():
                       font_size=10, autosize=False, width=800, height=500, margin=dict(l=20, r=40, t=100, b=20))
     return fig
 
-fig = figM()
+fig = figM(anime)
+
+# if st.sidebar.button('Apply filter.'):
+#     anime = anime[filter]
+#     fig = figM()
+
+# if st.sidebar.button('Unfilter.'):
+#     anime = load_animedata()
+    
 
 st.title("So, what anime should you watch?")
 st.write('''I've come up with two complimentary methods to help you plan your anime journey out.
@@ -53,8 +99,12 @@ st.write('''#### How does the Anime Scout work?
 
 So, what are you waiting for? Let's scout some anime!''')
 
+anime = load_animedata()
 x = st.text_input('Tell me an anime you like:')
-anime_name = anime[anime['name'].str.contains(x, case=False)].sort_values(by='members', ascending=False).reset_index()['name'][0]
+try:
+    anime_name = anime[anime['name'].str.contains(x, case=False)].sort_values(by='members', ascending=False).reset_index()['name'][0]
+except:
+    st.write('This anime is not in the database. Sorry!')
 n = st.number_input('How many anime should I scout?', min_value=1,max_value=25,value=10,step=1)
 
 @st.cache 
@@ -96,15 +146,15 @@ def AnimeScout(x,n):
             count +=1
     except:
         st.write('Anime named "{}" was not found. Please try again with a different name!'.format(x))
-        st.write('''#### Some tips:
+        st.write('''Some tips:
                  
-                 * Try using the Japanese name. Eg: Yu Yu Hakusho instead of Ghost Fighter.
-                 * Try using the full name. Eg: Ano Hi Mita Hana instead of AnoHana.
-                 * Try being mindful of spaces. Eg: Hunter X Hunter instead of HunterXHunter.
-                 * Try using full forms. Eg: Fullmetal Alchemist instead of FMA.
-                 * Lastly, not every anime is on the database yet.
+        * Try using the Japanese name. Eg: Yu Yu Hakusho instead of Ghost Fighter.
+        * Try using the full name. Eg: Ano Hi Mita Hana instead of AnoHana.
+        * Try being mindful of spaces. Eg: Hunter X Hunter instead of HunterXHunter.
+        * Try using full forms. Eg: Fullmetal Alchemist instead of FMA.
+        * Lastly, not every anime is on the database yet.
                  
-                 Thank you. Have fun Scouting!''')
+        Thank you. Have fun Scouting!''')
     
 
 if st.button('Scout Anime!'):
