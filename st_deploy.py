@@ -11,21 +11,7 @@ def load_animedata():
     return pd.read_csv("data1/finalanime.csv")
 
 anime = load_animedata()
-# minmem = int(anime['members'].min())
-# maxmem = int(anime['members'].max())
 
-# types = st.sidebar.selectbox('Select your medium:', anime['type'].drop_duplicates())
-# genres = st.sidebar.selectbox('Select your genre:', anime['genre1'].drop_duplicates())
-# ratings = st.sidebar.slider('Rating:',min_value=0,max_value=10,value=(0,10))
-# members = st.sidebar.slider('Members:',min_value=minmem,max_value=maxmem,value=(minmem,maxmem),step=1)
-
-# @st.cache 
-# def set_filters():
-#     df = anime.loc[(anime['type']==types) & (anime['genre1']==genres) & 
-#                    (anime['rating']==ratings) & (anime['members']==members)]
-#     return df
-
-# anime1 = set_filters()
 
 @st.cache(allow_output_mutation=True)
 def figM():
@@ -68,8 +54,9 @@ st.write('''#### How does the Anime Scout work?
 So, what are you waiting for? Let's scout some anime!''')
 
 x = st.text_input('Tell me an anime you like:')
-n = st.number_input('How many anime should I scout?', min_value=1,max_value=25,value=10,step=1)
 anime_name = anime[anime['name'].str.contains(x, case=False)].sort_values(by='members', ascending=False).reset_index()['name'][0]
+n = st.number_input('How many anime should I scout?', min_value=1,max_value=25,value=10,step=1)
+
 @st.cache 
 def load_itemsdata():
     # user_sub = pd.read_csv('data1/ratingSub.zip')
@@ -100,13 +87,16 @@ def load_itemsdata():
     return items
 
 def AnimeScout(x,n):
-    items = load_itemsdata()
-    anime_name = anime[anime['name'].str.contains(x, case=False)].sort_values(by='members', ascending=False).reset_index()['name'][0]
-    count = 1
-    st.write('If you like {}, you may also like:\n'.format(anime_name))
-    for item in items.sort_values(by = anime_name, ascending = False).name[1:n+1]:
-        st.write('No. {}: {}'.format(count, item))
-        count +=1
+    try:
+        items = load_itemsdata()
+        count = 1
+        st.write('If you like {}, you may also like:\n'.format(anime_name))
+        for item in items.sort_values(by = anime_name, ascending = False).name[1:n+1]:
+            st.write('No. {}: {}'.format(count, item))
+            count +=1
+    except:
+        st.write('Anime named "{}" was not found. Please try again with a different name!'.format(x))    
+    
 
 if st.button('Scout Anime!'):
     AnimeScout(x,n)
