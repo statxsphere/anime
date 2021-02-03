@@ -20,8 +20,8 @@ members = st.sidebar.slider('Members:',min_value=0,max_value=maxmem,value=(0,max
 
 @st.cache 
 def set_filters():
-    df = anime.loc[(anime['type']=types) & (anime['genre1']=genres) & 
-                   (anime['rating']= ratings) & (anime['members']=members)]
+    df = anime.loc[(anime['type']==types) & (anime['genre1']==genres) & 
+                   (anime['rating']==ratings) & (anime['members']==members)]
     return df
 
 @st.cache(allow_output_mutation=True)
