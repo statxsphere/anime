@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as pex
-# import numpy as np
+import numpy as np
 # import scipy as sp
 # from sklearn.metrics.pairwise import cosine_similarity
 
