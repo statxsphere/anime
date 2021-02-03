@@ -95,7 +95,16 @@ def AnimeScout(x,n):
             st.write('No. {}: {}'.format(count, item))
             count +=1
     except:
-        st.write('Anime named "{}" was not found. Please try again with a different name!'.format(x))    
+        st.write('Anime named "{}" was not found. Please try again with a different name!'.format(x))
+        st.write('''###### Some tips:
+                 
+                 * Try using the Japanese name. Eg: Yu Yu Hakusho instead of Ghost Fighter.
+                 * Try using the full name. Eg: Ano Hi Mita Hana instead of AnoHana.
+                 * Try being mindful of spaces. Eg: Hunter X Hunter instead of HunterXHunter.
+                 * Try using full forms. Eg: Fullmetal Alchemist instead of FMA.
+                 * Lastly, not every anime is on the database yet.
+                 
+                 Thank you. Have fun Scouting!''')
     
 
 if st.button('Scout Anime!'):
