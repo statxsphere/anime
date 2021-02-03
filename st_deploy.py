@@ -64,9 +64,10 @@ st.write('''#### How does the Anime Scout work?
 So, what are you waiting for? Let's scout some anime!''')
 
 x = st.text_input('Tell me an anime you like:')
+n = st.int_input('How many anime should I scout?')
 anime_name = anime[anime['name'].str.contains(x, case=False)].sort_values(by='members', ascending=False).reset_index()['name'][0]
-@st.cache 
-def load_itemsdata():
+# @st.cache 
+# def load_itemsdata():
     # user_sub = pd.read_csv('data1/ratingSub.zip')
     # user_sub = user_sub.apply(pd.to_numeric,downcast='integer')
     # merged = user_sub.merge(anime, left_on = 'anime_id', right_on = 'anime_id', suffixes= ['_user', ''])
@@ -91,17 +92,14 @@ def load_itemsdata():
     # piv_sparse = sp.sparse.csr_matrix(piv_norm.values) 
     # items = pd.DataFrame(cosine_similarity(piv_sparse), index = piv_norm.index, columns = piv_norm.index)
     # del piv_norm, piv_sparse
-    items = pd.read_parquet('https://www.dropbox.com/s/ienvkpyi1zpqmgn/itemsnew.parquet?dl=1')
-                        # ,usecols=['name',anime_name])
-    return items
+items = pd.read_csv('https://www.dropbox.com/s/29gp0edhsnr25nu/items.csv?dl=1',usecols=['name',anime_name])
+    
 
-items = load_itemsdata()
-
-def AnimeScout(x):
+def AnimeScout(x,n):
     anime_name = anime[anime['name'].str.contains(x, case=False)].sort_values(by='members', ascending=False).reset_index()['name'][0]
     count = 1
     st.write('If you like {}, you may also like:\n'.format(anime_name))
-    for item in items.sort_values(by = anime_name, ascending = False).name[1:11]:
+    for item in items.sort_values(by = anime_name, ascending = False).name[1:n+1]:
         st.write('No. {}: {}'.format(count, item))
         count +=1
 
