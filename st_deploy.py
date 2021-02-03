@@ -12,10 +12,10 @@ def load_animedata():
 
 anime = load_animedata()
 n_rows = anime.shape[0]
-minmem = anime['members'].min()
-maxmem = anime['members'].max()
-epmin = anime['episodes'].min()
-epmax = anime['episodes'].max()
+minmem = int(anime['members'].min())
+maxmem = int(anime['members'].max())
+epmin = float(anime['episodes'].min())
+epmax = float(anime['episodes'].max())
 
 # types = st.sidebar.selectbox('Select your medium:', anime['type'].unique())
 # genres = anime["genre1"].loc[anime["type"] == types]
