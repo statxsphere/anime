@@ -8,23 +8,25 @@ import plotly.express as pex
 
 @st.cache 
 def load_animedata():
-    anime = pd.read_csv("data1/finalanime.csv")
-    return anime
+    return pd.read_csv("data1/finalanime.csv")
 
 anime = load_animedata()
+maxmem = anime['members'].max()
 
-# items = pd.read_csv('https://www.dropbox.com/s/29gp0edhsnr25nu/items.csv?dl=1')
+types = st.sidebar.selectbox('Select your medium:', anime['type'].drop_duplicates())
+genres = st.sidebar.selectbox('Select your genre:', anime['genre1'].drop_duplicates())
+ratings = st.sidebar.slider('Rating:',min_value=0,max_value=10,value=(0,10))
+members = st.sidebar.slider('Members:',min_value=0,max_value=maxmem,value=(0,maxmem),step=1)
 
-# def AnimeScout(x):
-#     anime_name = anime[anime['name'].str.contains(x, case=False)].sort_values(by='members', ascending=False).reset_index()['name'][0]
-#     count = 1
-#     st.write('If you like {}, you may also like:\n'.format(anime_name))
-#     for item in items.sort_values(by = anime_name, ascending = False).name[1:11]:
-#         st.write('No. {}: {}'.format(count, item))
-#         count +=1
+@st.cache 
+def set_filters():
+    df = anime.loc[(anime['type']=types) & (anime['genre1']=genres) & 
+                   (anime['rating']= ratings) & (anime['members']=members)]
+    return df
 
 @st.cache(allow_output_mutation=True)
 def figM():
+    anime = set_filters()
     fig = pex.treemap(anime.dropna(how='any'), path=['type','genre1', 'name'], values='members',
                       color='rating', hover_data=['rating','episodes'],
                       color_continuous_scale='RdBu')
