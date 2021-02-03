@@ -104,4 +104,4 @@ def AnimeScout(x,n):
         count +=1
 
 if st.button('Scout Anime!'):
-    AnimeScout(x)
+    AnimeScout(x,n)
