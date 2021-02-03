@@ -64,7 +64,7 @@ st.write('''#### How does the Anime Scout work?
 So, what are you waiting for? Let's scout some anime!''')
 
 x = st.text_input('Tell me an anime you like:')
-n = st.int_input('How many anime should I scout?')
+n = st.number_input('How many anime should I scout?', min_value=1,max_value=25,value=10,step=1)
 anime_name = anime[anime['name'].str.contains(x, case=False)].sort_values(by='members', ascending=False).reset_index()['name'][0]
 # @st.cache 
 # def load_itemsdata():
