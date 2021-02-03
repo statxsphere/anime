@@ -96,7 +96,7 @@ def AnimeScout(x,n):
             count +=1
     except:
         st.write('Anime named "{}" was not found. Please try again with a different name!'.format(x))
-        st.write('''##### Some tips:
+        st.write('''#### Some tips:
                  
                  * Try using the Japanese name. Eg: Yu Yu Hakusho instead of Ghost Fighter.
                  * Try using the full name. Eg: Ano Hi Mita Hana instead of AnoHana.
