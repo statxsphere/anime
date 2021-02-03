@@ -23,11 +23,16 @@ anime = load_animedata()
 #         st.write('No. {}: {}'.format(count, item))
 #         count +=1
 
-fig = pex.treemap(anime.dropna(how='any'), path=['type','genre1', 'name'], values='members',
-                  color='rating', hover_data=['rating','episodes'],
-                  color_continuous_scale='RdBu')
-fig.update_layout(title_text="Which Anime Should You Watch?",
-                  font_size=10, autosize=False, width=800, height=500, margin=dict(l=20, r=40, t=100, b=20))
+@st.cache 
+def figM():
+    fig = pex.treemap(anime.dropna(how='any'), path=['type','genre1', 'name'], values='members',
+                      color='rating', hover_data=['rating','episodes'],
+                      color_continuous_scale='RdBu')
+    fig.update_layout(title_text="Which Anime Should You Watch?",
+                      font_size=10, autosize=False, width=800, height=500, margin=dict(l=20, r=40, t=100, b=20))
+    return fig
+
+fig = figM()
 
 st.title("So, what anime should you watch?")
 st.write('''I've come up with two complimentary methods to help you plan your anime journey out.
@@ -62,31 +67,31 @@ x = st.text_input('Tell me an anime you like:')
 anime_name = anime[anime['name'].str.contains(x, case=False)].sort_values(by='members', ascending=False).reset_index()['name'][0]
 @st.cache 
 def load_itemsdata():
-    # user_sub = pd.read_csv('data1/ratingSub.zip')
-    # user_sub = user_sub.apply(pd.to_numeric,downcast='integer')
-    # merged = user_sub.merge(anime, left_on = 'anime_id', right_on = 'anime_id', suffixes= ['_user', ''])
-    # del user_sub
-    # merged.rename(columns = {'rating_user':'user_rating'}, inplace = True)
-    # ints = merged.select_dtypes(include=['int'])
-    # floats = merged.select_dtypes(include=['float'])
-    # converted_int = ints.apply(pd.to_numeric,downcast='integer')
-    # convMem = merged.members.astype('int32')
-    # converted_flt = floats.apply(pd.to_numeric,downcast='float')
-    # merged[converted_int.columns] = converted_int
-    # merged[converted_flt.columns] = converted_flt
-    # merged['members'] = convMem
-    # del ints,floats,converted_int,convMem,converted_flt
-    # piv = merged.pivot_table(index=['user_id'], columns=['name'], values='user_rating').apply(pd.to_numeric,downcast='float')
-    # del merged
-    # piv_norm = piv.apply(lambda x: (x-np.mean(x))/(np.max(x)-np.min(x)), axis=1)
-    # del piv
-    # piv_norm.fillna(0, inplace=True)
-    # piv_norm = piv_norm.T
-    # piv_norm = piv_norm.loc[:, (piv_norm != 0).any(axis=0)]
-    # piv_sparse = sp.sparse.csr_matrix(piv_norm.values) 
-    # items = pd.DataFrame(cosine_similarity(piv_sparse), index = piv_norm.index, columns = piv_norm.index)
-    # del piv_norm, piv_sparse
-    items = pd.read_csv('https://www.dropbox.com/s/29gp0edhsnr25nu/items.csv?dl=1',usecols=['name',anime_name])
+    user_sub = pd.read_csv('data1/ratingSub.zip')
+    user_sub = user_sub.apply(pd.to_numeric,downcast='integer')
+    merged = user_sub.merge(anime, left_on = 'anime_id', right_on = 'anime_id', suffixes= ['_user', ''])
+    del user_sub
+    merged.rename(columns = {'rating_user':'user_rating'}, inplace = True)
+    ints = merged.select_dtypes(include=['int'])
+    floats = merged.select_dtypes(include=['float'])
+    converted_int = ints.apply(pd.to_numeric,downcast='integer')
+    convMem = merged.members.astype('int32')
+    converted_flt = floats.apply(pd.to_numeric,downcast='float')
+    merged[converted_int.columns] = converted_int
+    merged[converted_flt.columns] = converted_flt
+    merged['members'] = convMem
+    del ints,floats,converted_int,convMem,converted_flt
+    piv = merged.pivot_table(index=['user_id'], columns=['name'], values='user_rating').apply(pd.to_numeric,downcast='float')
+    del merged
+    piv_norm = piv.apply(lambda x: (x-np.mean(x))/(np.max(x)-np.min(x)), axis=1)
+    del piv
+    piv_norm.fillna(0, inplace=True)
+    piv_norm = piv_norm.T
+    piv_norm = piv_norm.loc[:, (piv_norm != 0).any(axis=0)]
+    piv_sparse = sp.sparse.csr_matrix(piv_norm.values) 
+    items = pd.DataFrame(cosine_similarity(piv_sparse), index = piv_norm.index, columns = piv_norm.index)
+    del piv_norm, piv_sparse
+    # items = pd.read_csv('https://www.dropbox.com/s/29gp0edhsnr25nu/items.csv?dl=1',usecols=['name',anime_name])
     return items
 
 
