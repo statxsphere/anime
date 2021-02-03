@@ -11,7 +11,7 @@ def load_animedata():
     return pd.read_csv("data1/finalanime.csv")
 
 anime = load_animedata()
-maxmem = anime['members'].max()
+maxmem = int(anime['members'].max())
 
 types = st.sidebar.selectbox('Select your medium:', anime['type'].drop_duplicates())
 genres = st.sidebar.selectbox('Select your genre:', anime['genre1'].drop_duplicates())
@@ -20,8 +20,8 @@ members = st.sidebar.slider('Members:',min_value=0,max_value=maxmem,value=(0,max
 
 @st.cache 
 def set_filters():
-    df = anime.loc[(anime['type']=types) & (anime['genre1']=genres) & 
-                   (anime['rating']= ratings) & (anime['members']=members)]
+    df = anime.loc[(anime['type']==types) & (anime['genre1']==genres) & 
+                   (anime['rating']==ratings) & (anime['members']==members)]
     return df
 
 @st.cache(allow_output_mutation=True)
