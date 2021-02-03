@@ -91,7 +91,7 @@ def load_itemsdata():
     # piv_sparse = sp.sparse.csr_matrix(piv_norm.values) 
     # items = pd.DataFrame(cosine_similarity(piv_sparse), index = piv_norm.index, columns = piv_norm.index)
     # del piv_norm, piv_sparse
-    items = pd.read_csv('https://www.dropbox.com/s/29gp0edhsnr25nu/items.csv?dl=1')
+    items = pd.read_parquet('https://www.dropbox.com/s/ienvkpyi1zpqmgn/itemsnew.parquet?dl=1')
                         # ,usecols=['name',anime_name])
     return items
 
