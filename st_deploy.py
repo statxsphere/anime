@@ -8,14 +8,20 @@ import numpy as np
 
 @st.cache 
 def load_animedata():
-    return pd.read_csv("data1/finalanime.csv")
+    return pd.read_csv("data1/finalanime1.zip")
 
 anime = load_animedata()
 n_rows = anime.shape[0]
+ratmin = float(anime['rating'].min())
+ratmax = float(anime['rating'].max())
 minmem = int(anime['members'].min())
 maxmem = int(anime['members'].max())
 epmin = float(anime['episodes'].min())
 epmax = float(anime['episodes'].max())
+minmin = float(anime['duration_min'].min())
+minmax = float(anime['duration_min'].max())
+yearmin = float(anime['aired_from_year'].min())
+yearmax = float(anime['aired_from_year'].max())
 
 # types = st.sidebar.selectbox('Select your medium:', anime['type'].unique())
 # genres = anime["genre1"].loc[anime["type"] == types]
@@ -32,10 +38,11 @@ epmax = float(anime['episodes'].max())
 #     ),
 # }
 st.sidebar.title('AniMap Filters:')
-ratings = st.sidebar.slider("Rating:", min_value=1.0,max_value=10.0,value=(1.0,10.0), step=0.1)
-members1 = st.sidebar.slider("Members", min_value=minmem,max_value=maxmem,value=(minmem,maxmem),step=1)
-episodes1 = st.sidebar.slider("Episodes", min_value=epmin,max_value=epmax,value=(epmin,epmax),step=1.0)
-
+ratings = st.sidebar.slider("Rating:", min_value=ratmin,max_value=ratmax,value=(8.0,ratmax), step=0.01)
+members1 = st.sidebar.slider("Members:", min_value=minmem,max_value=maxmem,value=(minmem,maxmem),step=1)
+episodes1 = st.sidebar.slider("Episodes:", min_value=epmin,max_value=epmax,value=(epmin,epmax),step=1.0)
+mins = st.sidebar.slider("Mins Per Episode:", min_value=minmin,max_value=minmax,value=(minmin,minmax),step=0.1)
+years = st.sidebar.slider("Year Premiered:", min_value=yearmin,max_value=yearmax,value=(yearmin,yearmax),step=1.0)
 # filter = np.full(n_rows, True)  # Initialize filter as only True
 
 # for feature_name, slider in sliders.items():
@@ -46,19 +53,30 @@ episodes1 = st.sidebar.slider("Episodes", min_value=epmin,max_value=epmax,value=
 #         & (anime[feature_name] <= slider[1])
 #     )
 
-
-anime = anime[(anime.rating.between(ratings[0],ratings[1])) 
-               & (anime.members.between(members1[0],members1[1]))
-               & (anime.episodes.between(episodes1[0],episodes1[1]))]
+@st.cache 
+def set_filter(anime):
+    try:
+        anime = anime[(anime.rating.between(ratings[0],ratings[1])) 
+                      & (anime.members.between(members1[0],members1[1]))
+                      & (anime.episodes.between(episodes1[0],episodes1[1]))
+                      & (anime.duration_min.between(mins[0],mins[1]))
+                      & (anime.aired_from_year.between(years[0],years[1]))]
+        return anime
+    except:
+        return st.write("These filters don't work, please try again!")
+anime = set_filter(anime)
 
 @st.cache(allow_output_mutation=True)
 def figM(anime):
-    fig = pex.treemap(anime.dropna(how='any'), path=['type','genre1', 'name'], values='members',
+    try:
+        fig = pex.treemap(anime, path=['type','genre', 'name'], values='members',
                       color='rating', hover_data=['rating','episodes'],
                       color_continuous_scale='RdBu')
-    fig.update_layout(title_text="Which Anime Should You Watch?",
+        fig.update_layout(title_text="Which Anime Should You Watch?",
                       font_size=10, autosize=False, width=800, height=500, margin=dict(l=20, r=40, t=100, b=20))
-    return fig
+        return fig
+    except:
+        return anime
 
 fig = figM(anime)
 
@@ -85,7 +103,8 @@ The AniMap is designed for people that are new to anime. It's an easy-to-use, in
 * Navigate through this map to find the kind of anime you feel most like watching.
 ''')
 
-st.plotly_chart(fig)
+st.write(fig)
+
 
 st.write('''### Method 2: The Anime Scout.
 
@@ -133,7 +152,8 @@ def load_itemsdata():
     # piv_sparse = sp.sparse.csr_matrix(piv_norm.values) 
     # items = pd.DataFrame(cosine_similarity(piv_sparse), index = piv_norm.index, columns = piv_norm.index)
     # del piv_norm, piv_sparse
-    items = pd.read_csv('https://www.dropbox.com/s/29gp0edhsnr25nu/items.csv?dl=1',usecols=['name',anime_name])
+    items = pd.read_csv('https://www.dropbox.com/s/q7it8067mxk9xl1/items1.csv?dl=1')
+                        # ,usecols=['name',anime_name])
     return items
 
 def AnimeScout(x,n):
