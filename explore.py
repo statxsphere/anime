@@ -11,16 +11,17 @@ def load_animedata():
     return pd.read_csv("data1/finalanime1.zip")
 
 anime = load_animedata()
-n_rows = anime.shape[0]
-ratmax = float(anime['rating'].max())
-# minmem = int(anime['members'].min())
-# maxmem = int(anime['members'].max())
-epmin = float(anime['episodes'].min())
-epmax = float(anime['episodes'].max())
-minmin = float(anime['duration_min'].min())
-minmax = float(anime['duration_min'].max())
-yearmin = float(anime['aired_from_year'].min())
-yearmax = float(anime['aired_from_year'].max())
+anime.astype({'rating':'float','episodes':'int','members':'int','duration_min':'float','aired_from_year':'int'})
+# n_rows = anime.shape[0]
+# ratmax = float(anime['rating'].max())
+# # minmem = int(anime['members'].min())
+# # maxmem = int(anime['members'].max())
+# epmin = float(anime['episodes'].min())
+# epmax = float(anime['episodes'].max())
+# minmin = float(anime['duration_min'].min())
+# minmax = float(anime['duration_min'].max())
+# yearmin = float(anime['aired_from_year'].min())
+# yearmax = float(anime['aired_from_year'].max())
 
 # types = st.sidebar.selectbox('Select your medium:', anime['type'].unique())
 # genres = anime["genre1"].loc[anime["type"] == types]
@@ -37,11 +38,11 @@ yearmax = float(anime['aired_from_year'].max())
 #     ),
 # }
 st.sidebar.title('AniMap Filters:')
-ratings = st.sidebar.slider("Rating:", min_value=1.0,max_value=ratmax,value=(8.0,ratmax), step=0.75)
+ratings = st.sidebar.slider("Rating:", min_value=6.5,max_value=10.0,value=(8.0,10.0), step=0.01)
 # members1 = st.sidebar.slider("Members:", min_value=minmem,max_value=maxmem,value=(minmem,maxmem),step=1)
-episodes1 = st.sidebar.slider("Episodes:", min_value=epmin,max_value=epmax,value=(epmin,epmax),step=1.0)
-mins = st.sidebar.slider("Mins Per Episode:", min_value=minmin,max_value=minmax,value=(minmin,minmax),step=0.1)
-years = st.sidebar.slider("Year Premiered:", min_value=yearmin,max_value=yearmax,value=(yearmin,yearmax),step=1.0)
+episodes1 = st.sidebar.slider("Episodes:", min_value=0,max_value=1818,value=(0,1818),step=1)
+mins = st.sidebar.slider("Mins Per Episode:", min_value=0.0,max_value=170.0,value=(0.0,170.0),step=0.1)
+years = st.sidebar.slider("Year Premiered:", min_value=1940,max_value=2018,value=(1940,2018),step=1)
 # filter = np.full(n_rows, True)  # Initialize filter as only True
 
 # for feature_name, slider in sliders.items():
@@ -61,12 +62,14 @@ def set_filter(anime):
                       & (anime.duration_min.between(mins[0],mins[1]))
                       & (anime.aired_from_year.between(years[0],years[1]))]
         return anime
-    except:
+    except Exception as e:
+        print(e)
         return '''## These filters don't work, please try again!'''
 anime = set_filter(anime)
 
 def figM(anime):
     try:
+        
         fig = pex.treemap(anime, path=['type','genre', 'name'], values='members',
                       color='rating', hover_data=['rating','episodes','aired_from_year','source'],
                       color_continuous_scale='RdBu')
@@ -151,8 +154,8 @@ def load_itemsdata():
     # piv_sparse = sp.sparse.csr_matrix(piv_norm.values) 
     # items = pd.DataFrame(cosine_similarity(piv_sparse), index = piv_norm.index, columns = piv_norm.index)
     # del piv_norm, piv_sparse
-    items = pd.read_csv('https://www.dropbox.com/s/q7it8067mxk9xl1/items1.csv?dl=1')
-    # items = pd.read_csv('data1/items1.csv')
+    # items = pd.read_csv('https://www.dropbox.com/s/q7it8067mxk9xl1/items1.csv?dl=1')
+    items = pd.read_csv('data1/items1.csv')
                     # ,usecols=['name',anime_name])
     return items
 
@@ -179,3 +182,4 @@ def AnimeScout(x,n):
 
 if st.button('Scout Anime!'):
     AnimeScout(x,n)
+
