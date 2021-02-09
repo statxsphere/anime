@@ -101,7 +101,8 @@ The AniMap is designed for people that are new to anime. It's an easy-to-use, in
 * The darkness of shade represents how highly the anime was rated.
 * You can zoom in to a category by clicking on it. You can zoom out by clicking the outer label on the top end of the map.
 * You can hover over any element to get its details.
-* You can open the sidebar to apply filters into your search. Be careful though, some filters can make the page very slow.
+* You can open the sidebar to apply filters into your search. Be careful though, some filters can make the page very slow or make the map disappear.
+* The map has been filtered down to the best rated anime only, to explore the entire dataset you can head [here](https://nbviewer.jupyter.org/github/statxsphere/anime/blob/master/AniMap.ipynb).
 * Navigate through this map to find the kind of anime you feel most like watching.
 ''')
 
@@ -154,8 +155,8 @@ def load_itemsdata():
     # piv_sparse = sp.sparse.csr_matrix(piv_norm.values) 
     # items = pd.DataFrame(cosine_similarity(piv_sparse), index = piv_norm.index, columns = piv_norm.index)
     # del piv_norm, piv_sparse
-    # items = pd.read_csv('https://www.dropbox.com/s/q7it8067mxk9xl1/items1.csv?dl=1')
-    items = pd.read_csv('data1/items1.csv')
+    items = pd.read_csv('https://www.dropbox.com/s/q7it8067mxk9xl1/items1.csv?dl=1')
+    # items = pd.read_csv('data1/items1.csv')
                     # ,usecols=['name',anime_name])
     return items
 
