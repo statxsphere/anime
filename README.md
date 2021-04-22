@@ -1,7 +1,7 @@
 # Project: The Anime Scout:
 ## An anime recommendation engine.
 
-#### Ever finished an anime and thought to yourself - "I want to watch that exact anime again, except with different characters and a different story."?.
+#### Ever finished an anime and thought to yourself - "I want to watch that exact anime again, except with different characters and a different story."?
 
 Well, I have! Which is why, I have used collaborative filtering to come up with an anime recommendation engine. I then deployed the project via Streamlit so that I can share my findings with all of you too. The live domain for this website can be found [here](https://share.streamlit.io/statxsphere/anime/explore.py) and due to computational limitations, the full "AniMap" can be found [here](https://nbviewer.jupyter.org/github/statxsphere/anime/blob/master/AniMap.ipynb). I hope you have fun and find the anime of your dreams!
 
